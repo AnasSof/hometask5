@@ -1,48 +1,76 @@
-import React, { useState } from 'react';
-import Table from "./components/common/Table";
-import Form from './components/common/Form'
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 
-// import './App.css';
-import 'bootstrap/dist/css/bootstrap.css';
+import "bootstrap/dist/css/bootstrap.css";
 
-const data = [
-    {first: 'Mark', last: 'Otto', handle: '@motto', id: '1'},
-    {first: 'Carl', last: 'Reno', handle: '@ceno', id: '2'},
-    {first: 'Steve', last: 'Smith', handle: '@ssteve', id: '3'}
-]
+import "./App.css";
 
-const columns = Object.keys(data[0]);
+import PeoplePage from "./components/PeoplePage/PeoplePage";
+import PlanetsPage from "./components/PlanetsPage/PlanetsPage";
+import StarshipsPage from "./components/StarshipsPage/StarshipsPage";
+import GeneralForm from "./components/common/GeneralForm";
+import { createBrowserHistory } from 'history';
+
+export const history = createBrowserHistory();
 
 function App() {
-    const [people, setPeople] = useState(data);
-    console.log(people);
+  return (
+    <Router history={history}>
+      <div>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <a className="navbar-brand" href="#">
+            JEDI
+          </a>
 
-    const handleAppPerson = (personData) => {
-        const data = [...people, personData];
-        setPeople(data)
-    }
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item active">
+                <a className="nav-link" href="#">
+                  <Link to="/people">People</Link>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  <Link to="/planets">Planets</Link>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  <Link to="/starships">Starships</Link>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
 
-    const getInitialPeopleData = () => {
-        return columns.reduce((cols, columnName) => {
-            cols[columnName] = "";
-            return cols;
-        }, {})
-    }
-
-    return (
-        <div className="container">
-            <Table
-                data={people}
-                columns={columns}
-                tableDescriptor="People"
-            />
-            <Form
-                initialData={getInitialPeopleData()}
-                columns={columns}
-                onAddData={handleAppPerson}
-            />
-        </div>
-    );
+      <Switch>
+        <Route path="/people">
+          <PeoplePage />
+        </Route>
+        <Route path="/planets">
+          <PlanetsPage />
+        </Route>
+        <Route path="/starships">
+          <StarshipsPage />
+        </Route>
+        <Route path="/form">
+          <GeneralForm />
+        </Route>
+        <Redirect
+          to={{
+            pathname: "/people",
+          }}
+        ></Redirect>
+      </Switch>
+    </Router>
+  );
 }
 
 export default App;
